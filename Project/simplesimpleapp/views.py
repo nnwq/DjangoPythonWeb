@@ -1,8 +1,11 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
-from .models import Product
-from datetime import datetime
+from django.urls import reverse_lazy
+from django.views.generic import (
+    ListView, DetailView, CreateView
+)
+
 from .filters import ProductFilter
+from .forms import ProductForm
+from .models import Product
 
 
 # Create your views here.
@@ -11,7 +14,7 @@ class ProductList(ListView):
     ordering = 'name'   # filter filed
     template_name = 'products.html'
     context_object_name = 'products'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -26,5 +29,12 @@ class ProductList(ListView):
 
 class ProductDetail(DetailView):
     model = Product
-    template_name = 'products.html'
-    context_object_name = 'products'
+    template_name = 'product.html'
+    context_object_name = 'product'
+
+
+class ProductCreate(CreateView):
+    form_class = ProductForm
+    model = Product
+    template_name = 'product_edit.html'
+
