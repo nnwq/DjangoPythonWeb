@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'full.mobile.middlewaretest.MobileOrFullMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
 ]
 
