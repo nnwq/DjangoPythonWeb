@@ -2,6 +2,10 @@ from django_filters import FilterSet
 from .models import Product
 
 
+class LogFilter(FilterSet):
+    pass
+
+
 class ProductFilter(FilterSet):
     class Meta:
         model = Product
