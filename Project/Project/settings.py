@@ -142,19 +142,25 @@ LOGGING = {
     'style': '{',
     'formatters': {
         'for_debug': {
-            'format': '%(levelname)s %(asctime)s %(message)s'
+            'format': '(levelname) (asctime) (message)'
         },
         'for_warning': {
-            'format': '%(levelname)s %(asctime)s %(message)s %(pathname)s'
+            'format': '(levelname) (asctime) (message) (pathname)'
         },
         'for_error_and_critical': {
-            'format': '%(levelname)s %(asctime)s %(message)s %(pathname)s %(exc_info)s'
-        }
+            'format': '(levelname) (asctime) (message) (pathname)s (exc_info)'
+        },
+        'for_info': {
+            'format': '(levelname) (asctime) (message) (module)'
+        },
     },
     'filters': {
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
     },
     'handlers': {
         'console': {
@@ -170,16 +176,52 @@ LOGGING = {
             'formatter': 'for_warning'
         },
         'critical_error': {
-            ''
-        },
-        'mail_admins': {
             'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'for_error_and_critical'
+        },
+        'critical': {
+            'level': 'CRITICAL',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'for_error_and_critical'
+        },
+        'into_errors': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'formatter': 'for_error_and_critical',
+            'filename': '/Project/log/errors.log'
+        },
+        'into_critical': {
+            'level': 'CRITICAL',
+            'class': 'logging.FileHandler',
+            'formatter': 'for_error_and_critical',
+            'filename': '/Project/log/errors.log'
+        },
+        'into_general': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filters': ['require_debug_false'],
+            'formatter': 'for_info',
+            'filename': '/Project/log/general.log'
+        },
+        'into_security': {
+            'class': 'logging.FileHandler',
+            'formatter': 'for_info',
+            'filename': '/Project/log/security.log'
+        },
+        'mail_error': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+            'formatter': 'for_warning',
         }
     },
     'loggers': {
         'django': {
-            'handlers': ['critical_error'],
+            'handlers': ['critical_error', 'critical', 'into_general'],
             'propagate': False,
         },
         'custom_logger': {
@@ -187,8 +229,23 @@ LOGGING = {
             'propagate': True,
         },
         'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
+            'handlers': ['into_errors', 'into_critical', 'mail_error'],
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['into_errors', 'into_critical', 'mail_error'],
+            'propagate': False,
+        },
+        'django.template': {
+            'handlers': ['into_errors', 'into_critical'],
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['into_errors', 'into_critical'],
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['into_security'],
             'propagate': False,
         }
     }
