@@ -142,16 +142,16 @@ LOGGING = {
     'style': '{',
     'formatters': {
         'for_debug': {
-            'format': '(levelname) (asctime) (message)'
+            'format': '%(levelname)s %(asctime)s %(message)s'
         },
         'for_warning': {
-            'format': '(levelname) (asctime) (message) (pathname)'
+            'format': '%(levelname)s %(asctime)s %(message)d %(pathname)d'
         },
         'for_error_and_critical': {
-            'format': '(levelname) (asctime) (message) (pathname)s (exc_info)'
+            'format': '%(levelname)s %(asctime) %(message)s %(pathname)s %(exc_info)s'
         },
         'for_info': {
-            'format': '(levelname) (asctime) (message) (module)'
+            'format': '%(levelname)s %(asctime) %(message)s %(module)s'
         },
     },
     'filters': {
@@ -204,12 +204,12 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filters': ['require_debug_false'],
             'formatter': 'for_info',
-            'filename': '/Project/log/general.log'
+            'filename': '/DjangoPythonWeb/Project/log/general.log'
         },
         'into_security': {
             'class': 'logging.FileHandler',
             'formatter': 'for_info',
-            'filename': '/Project/log/security.log'
+            'filename': '/DjangoPythonWeb/Project/log/security.log'
         },
         'mail_error': {
             'level': 'ERROR',
